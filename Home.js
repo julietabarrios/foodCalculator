@@ -1,48 +1,44 @@
 import React, {useState,useEffect} from 'react'
+import axios from 'axios';
 import { StyleSheet, Text, View, Button, TextInput, SafeAreaView, Image, Modal, Pressable } from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SavedRecipes from './SavedRecipes';
-import ActualSearch from './ActualRecipe';
+import ActualRecipe from './ActualRecipe';
 
 
-const Stack = createNativeStackNavigator();
-
-
-export default function Home({navigation}) {
+export default function Home() {
     const [search, setSearch] = useState('')
     const [result, setResult]=useState([])
-    const [modalVisible, setModalVisible] = useState(false);
+    const [chosenOption,setChosenOption]=useState({
+        description:'',
+        category:'',
+        kcal:0
+    })
 
-    useEffect(
-        () => {
-    const searchFood = async ()=>{
-        try{
-          const response = await axios.post(`https://api.nal.usda.gov/fdc/v1/foods/search?3nfVd5dGrcppdxcvsNUAh8ZqVeE7xZBfeXMLBZUq`,{
-            "query": "Cheddar cheese",
-            "dataType": [
-              "Foundation",
-              "SR Legacy"
-            ],
-            "pageSize": 25,
-            "pageNumber": 2,
-            "sortBy": "dataType.keyword",
-            "sortOrder": "asc",
-            "brandOwner": "Kar Nut Products Company"
-          })
-          setResult(response)
-        }
-        catch(error){
-          console.log(error);
-        }
+  const saveInActualSearch = (option, nutrient)=>{
+    setChosenOption({
+        description: option.description,
+        category:option.foodCategory,
+        kcal:nutrient.value
+    })
+  }
+
+  const showResult = async () => {
+    try{
+        const response = await axios.get(`https://api.nal.usda.gov/fdc/v1/foods/search?api_key=3nfVd5dGrcppdxcvsNUAh8ZqVeE7xZBfeXMLBZUq&query=${search}`)
+        setResult(response.data.foods)
+        console.log(response.data.foods)
       }
-    searchFood()
-  },[search]);
-
+      catch(error){
+        console.log(error);
+      }
+    }
   
     return (
     <SafeAreaView style={styles.container}>
     
     <SavedRecipes/>
+    <ActualRecipe chosenOption={chosenOption} setChosenOption={setChosenOption}/>
 
       <Text style={styles.title}>Search a food or ingredient</Text>
 
@@ -50,11 +46,28 @@ export default function Home({navigation}) {
         style={styles.input}
         onChangeText={(text) => setSearch(text)}
         value={search}
-        onSubmitEditing={(event) => setSearch(event.nativeEvent.text)}/>
+   />
 
-        <Text>{result}</Text>
+    <Pressable
+        style={[styles.button]}
+        onPress={showResult}>
+        <Text style={styles.textStyleButton}>&#128270;</Text>
+    </Pressable>
 
-    <ActualSearch/>
+    {result.length>1 && result.map((option)=>(
+        option.foodNutrients.map((nutrient)=>(
+        nutrient.unitName == 'KCAL'&&
+        <Pressable style={styles.optionResult} onPress={()=>{saveInActualSearch(option, nutrient)}}>
+        <Text 
+            style={styles.text}
+            >Food: {option.description}
+        </Text>
+        <Text 
+            style={styles.text}
+            >Category: {option.foodCategory}
+        </Text>
+        <Text>{nutrient.value} {nutrient.unitName}</Text>
+    </Pressable>))))}
 
     </SafeAreaView>
   );
@@ -65,6 +78,11 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     justifyContent:'center',
+  },
+  optionResult:{
+    borderColor:'#8FBC8F',
+    borderStyle:'solid',
+    borderWidth:1,
   },
   input:{
     borderStyle: "solid",

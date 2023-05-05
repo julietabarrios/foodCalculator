@@ -1,13 +1,50 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View} from 'react-native'
+import { Button } from 'react-native-paper';
 
 
-const ActualSearch = () => {
+const ActualSearch = ({chosenOption}) => {
     const [modalVisible, setModalVisible] = useState(false);
+    const [actualRecipe, setActualRecipe]=useState([])
 
     const openCloseModal =()=>{
         setModalVisible(!modalVisible)
     }
+
+    useEffect(
+      () => {
+        const temp = [...actualRecipe]
+        temp.push(chosenOption)
+        setActualRecipe(temp)
+      },[chosenOption]);
+
+
+      const displayActualRecipe = () => (
+        actualRecipe.map((food, i)=>(
+            <View style={styles.optionResult}>
+            <Text 
+                style={styles.text}
+                key={i}>Food: {food.description}
+            </Text>
+            <Text 
+                style={styles.text}
+                key={i}>Category: {food.category}
+            </Text>
+            <Text 
+                style={styles.text}
+                key={i}>KCAL: {food.kcal}
+            </Text>
+            <Button title='Delete from receipe' onPress={()=>{deleteFromReceipe(i)}}/>
+            
+        </View>
+        ))
+      )
+
+      const deleteFromReceipe = (i)=>{
+        const temp=[...actualRecipe]
+        temp.splice(i,1)
+        setActualRecipe(temp)
+      }
 
   return (
     <SafeAreaView>
@@ -32,6 +69,10 @@ const ActualSearch = () => {
             <Text style={styles.textStyleButton}>x</Text>
         </Pressable>
           <Text style={styles.modalText}>Your saved ingredientes for your actual recipe</Text>
+          {displayActualRecipe()}
+          <Text>{actualRecipe.reduce((total,receipe)=>(total + receipe.kcal),0)}</Text>
+        <Button title='Save receipe'/>
+        <Button title='Delelte all the receipe'/>
         </View>
       </Modal>
 

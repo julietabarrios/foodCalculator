@@ -11,9 +11,9 @@ const SavedRecipes = () => {
   return (
     <SafeAreaView>
     <Pressable
-        style={[styles.button]}
+        style={[styles.button, styles.buttonOpen]}
         onPress={openModal}>
-        <Text style={styles.textStyleButton}>&#128194;</Text>
+        <Text style={styles.textStyleButton}>Saved Recipes</Text>
     </Pressable>
     <Modal
     animationType="slide"
@@ -39,10 +39,11 @@ export default SavedRecipes
 
 const styles = StyleSheet.create({
     button:{
-      borderRadius: 20,
-      padding: 10,
-      elevation: 2,
-    },
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2, 
+        backgroundColor: '#C71585',
+      },
     centeredView: {
       flex: 1,
       marginTop: 22,
@@ -64,10 +65,10 @@ const styles = StyleSheet.create({
       elevation: 5,
     },
     textStyleButton: {
-      color: '#C71585',
-      fontWeight: 'bold',
-      textAlign:'center'
-    },
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign:'center'
+      },
     buttonOpen:{
       width:250,
       marginTop:20,
