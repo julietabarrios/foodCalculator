@@ -2,12 +2,14 @@ import React, {useState} from 'react'
 import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View} from 'react-native'
 
 
-const SavedRecipes = () => {
+const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     const openModal =()=>{
         setModalVisible(true)
     }
+
+
   return (
     <SafeAreaView>
     <Pressable

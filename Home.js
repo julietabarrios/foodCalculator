@@ -14,6 +14,7 @@ export default function Home() {
         category:'',
         kcal:0
     })
+    const [historyRecipe, setHistoryRecipe]= useState([])
 
   const saveInActualSearch = (option, nutrient)=>{
     setChosenOption({
@@ -37,8 +38,8 @@ export default function Home() {
     return (
     <SafeAreaView style={styles.container}>
     
-    <SavedRecipes/>
-    <ActualRecipe chosenOption={chosenOption} setChosenOption={setChosenOption}/>
+    <SavedRecipes historyRecipe={historyRecipe} setHistoryRecipe={setHistoryRecipe}/>
+    <ActualRecipe chosenOption={chosenOption} setChosenOption={setChosenOption} setHistoryRecipe={setHistoryRecipe}/>
 
       <Text style={styles.title}>Search a food or ingredient</Text>
 
