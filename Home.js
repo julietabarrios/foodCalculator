@@ -60,7 +60,11 @@ export default function Home() {
 
     return (
     <SafeAreaView style={styles.container}>
-    
+    <View style={styles.topBar}>
+    <SavedRecipes historyRecipe={historyRecipe} setHistoryRecipe={setHistoryRecipe}/>      
+    <ActualRecipe chosenOption={chosenOption} historyRecipe={historyRecipe} setHistoryRecipe={setHistoryRecipe} setSuccessMessage={setSuccessMessage}/>
+    </View>
+
       <Text style={styles.title}>Search for an ingredient</Text>
     <View style={styles.inputPart}>
       <TextInput
@@ -119,10 +123,7 @@ export default function Home() {
     </Modal>
     <Text>{message}</Text>
     <Text>{successMessage}</Text>
-    <View style={styles.bottomBar}>
-    <SavedRecipes historyRecipe={historyRecipe} setHistoryRecipe={setHistoryRecipe}/>      
-    <ActualRecipe chosenOption={chosenOption} historyRecipe={historyRecipe} setHistoryRecipe={setHistoryRecipe} setSuccessMessage={setSuccessMessage}/>
-    </View>
+    
 
     </SafeAreaView>
   );
@@ -158,12 +159,12 @@ const styles = StyleSheet.create({
   title:{
     textAlign:'center',
     fontSize:30,
-    marginTop:200,
   },
-  bottomBar:{
+  topBar:{
     flex:1,
     flexDirection:'row',
     justifyContent:'center',
+    alignItems:'flex-start'
   },
   results:{
     height:90,
