@@ -11,6 +11,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "jsEngine": "hermes",
+    "ios": {
+      "jsEngine": "jsc"
+    },
     "assetBundlePatterns": [
       "**/*"
     ],

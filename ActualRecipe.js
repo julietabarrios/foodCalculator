@@ -3,12 +3,11 @@ import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View} from 'react-nati
 import { Button, TextInput } from 'react-native-paper';
 
 
-const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe}) => {
+const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccessMessage}) => {
     const [modalVisible, setModalVisible] = useState(false);
-    const [actualRecipe, setActualRecipe]=useState([])
-    const [actualRecipeWName,setActualRecipeWName]=useState({})
-    const [nameReceipe, setNameReceipe]= useState("")
+    const [actualRecipe, setActualRecipe]=useState({name:"", ingredients: []})
     const [message, setMessage]= useState('')
+    
 
     const openCloseModal =()=>{
         setModalVisible(!modalVisible)
@@ -16,14 +15,18 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe}) => {
 
     useEffect(
       () => {
-        const temp = [...actualRecipe]
+        if(chosenOption.description != ""){
+        const temp = [...actualRecipe.ingredients]
         temp.push(chosenOption)
-        setActualRecipe(temp)
+        setActualRecipe({ingredients:temp})
+        console.log(chosenOption)
+        console.log(actualRecipe);
+      }
       },[chosenOption]);
 
 
       const displayActualRecipe = () => (
-        actualRecipe.map((food, i)=>(
+        actualRecipe.ingredients.map((food, i)=>(
             <View style={styles.optionResult}>
             <Text 
                 style={styles.text}
@@ -45,23 +48,27 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe}) => {
       )
 
       const deleteFromReceipe = (i)=>{
-        const temp=[...actualRecipe]
+        const temp=[actualRecipe.ingredients]
         temp.splice(i,1)
-        setActualRecipe(temp)
+        setActualRecipe({...actualRecipe, ingredients:temp})
       }
 
       const deleteAll = ()=>{
-        setActualRecipe([])
+        setActualRecipe({name:"", ingredients: []})
       }
 
       const saveToHistory = ()=>{
-        if (nameReceipe!=''){
+        if (actualRecipe.name!=''){
+          // SET HISTORY RECIPE HERE IN A USE EFFECT
           const temp = [...historyRecipe]
-          temp.push(actualRecipeWName)
+          temp.push(actualRecipe)
           setHistoryRecipe(temp)
           openCloseModal()
-          setActualRecipe([])
-          setActualRecipeWName({})
+          setActualRecipe({name:"", ingredients: []})
+          setSuccessMessage('The recipe was successfully added to your history!')
+          setTimeout(() => {
+            setSuccessMessage('');
+          }, 4000);
         }
         else{
           setMessage('Before saving you should input a receipe name')
@@ -72,8 +79,7 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe}) => {
       }
 
       const handleNameReceipe = (text)=>{
-        setNameReceipe(text)
-        setActualRecipeWName({nameReceipe:[...actualRecipe]})
+        setActualRecipe({...actualRecipe, name: text})
       }
 
   return (
@@ -98,17 +104,18 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe}) => {
             onPress={openCloseModal}>
             <Text style={styles.textStyleButton}>x</Text>
         </Pressable>
-          {actualRecipe.length > 1 && 
+          {actualRecipe.ingredients.length > 0 && 
           <TextInput 
           style={styles.input}
           onChangeText={(text) => handleNameReceipe(text)}
-          value={nameReceipe}/>}
+          value={actualRecipe.name}/>}
 
-          {actualRecipe.length < 1 && <Text>There aren't saved ingredients</Text>}
-          {actualRecipe.length > 1 && <Text style={styles.modalText}>Edit your receipe</Text>}
-          {actualRecipe.length > 1 && displayActualRecipe()}
-          {actualRecipe.length > 1 && <Text>{actualRecipe.reduce((total,receipe)=>(total + receipe.kcal),0)}</Text>}
+          {actualRecipe.ingredients.length < 1 && <Text>There aren't saved ingredients</Text>}
+          {actualRecipe.ingredients.length > 0 && <Text style={styles.modalText}>Edit your receipe</Text>}
+          {actualRecipe.ingredients.length > 0 && displayActualRecipe()}
+          {actualRecipe.ingredients.length > 0 && <Text>{actualRecipe.ingredients.reduce((total,food)=>(total + food.kcal),0)}</Text>}
           <Text>{message}</Text>
+
         <Pressable onPress={saveToHistory} style={[styles.button, styles.buttonClose]}>
         <Text style={styles.textStyleButton}>Save Receipe</Text> 
         </Pressable>
@@ -126,10 +133,9 @@ export default ActualSearch
 
 const styles = StyleSheet.create({
     button:{
-      borderRadius: 20,
       padding: 10,
       elevation: 2, 
-      backgroundColor: '#C71585',
+      backgroundColor: 'black',
     },
     centeredView: {
       flex: 1,

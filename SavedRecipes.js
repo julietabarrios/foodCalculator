@@ -1,12 +1,43 @@
 import React, {useState} from 'react'
 import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View} from 'react-native'
+import AllRecipeSaved from './AllRecipeSaved'
 
 
 const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
-    const [modalVisible, setModalVisible] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
+
 
     const openModal =()=>{
         setModalVisible(true)
+    }
+
+    // {name:"", ingredients: []}
+
+    const displayhistoryReceipe = () => (
+      historyRecipe.map((receipe, i)=>(
+          <View style={styles.receipeSaved}>
+          <Text 
+              style={styles.text}
+              key={i}>Receipe: {receipe.name}
+          </Text>
+          <Pressable style={[styles.buttonSavedRecipe, styles.buttonSeeMore]} onPress={()=>{displayAllReceipe(i)}}>
+            <Text>See more</Text>
+          </Pressable>
+          <Pressable style={[styles.buttonSavedRecipe, styles.buttonDelete]} onPress={()=>{deleteFromHistory(i)}}>
+            <Text>&#128465;</Text>
+          </Pressable>
+      </View>
+      ))
+    )
+
+    const deleteFromHistory = (i)=>{
+      const temp = [...historyRecipe]
+      temp.splice(1,i)
+      setHistoryRecipe(temp)
+    }
+
+    const displayAllReceipe = (i)=>{
+      <AllRecipeSaved index={i}/>
     }
 
 
@@ -31,6 +62,7 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
             <Text style={styles.textStyleButton}>x</Text>
     </Pressable>
     <Text style={[styles.modalText]}>Your saved recipes</Text>
+    {displayhistoryReceipe()}
     </View>
     </Modal>
     </SafeAreaView>
@@ -41,10 +73,9 @@ export default SavedRecipes
 
 const styles = StyleSheet.create({
     button:{
-        borderRadius: 20,
         padding: 10,
         elevation: 2, 
-        backgroundColor: '#C71585',
+        backgroundColor:'black',
       },
     centeredView: {
       flex: 1,
@@ -79,4 +110,24 @@ const styles = StyleSheet.create({
       marginBottom: 15,
       textAlign: 'center',
     },
+    buttonSavedRecipe:{
+      borderColor:'black',
+      borderStyle:'solid',
+      borderWidth:2,
+      borderRadius:5
+    },
+    buttonDelete:{
+      width:30,
+      marginTop:10,
+    },
+    buttonSeeMore:{
+      width:70,
+      marginTop:10,
+    },
+    receipeSaved:{
+      flex:1,
+      flexDirection:'row',
+      alignItems:'center',
+      justifyContent:'center'
+    }
   });
