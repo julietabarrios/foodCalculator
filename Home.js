@@ -1,7 +1,6 @@
 import React, {useState,useEffect} from 'react'
 import axios from 'axios';
 import { StyleSheet, Text, View, Button, TextInput, SafeAreaView, Image, Modal, Pressable } from 'react-native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SavedRecipes from './SavedRecipes';
 import ActualRecipe from './ActualRecipe';
 
@@ -14,7 +13,13 @@ export default function Home() {
         category:'',
         kcal:0
     })
-    const [historyRecipe, setHistoryRecipe]= useState([])
+  const [historyRecipe, setHistoryRecipe]= useState([])
+  const [displayOk, setDisplayOk]= useState(true)
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const openCloseModal =()=>{
+    setModalVisible(!modalVisible)
+}
 
   const saveInActualSearch = (option, nutrient)=>{
     setChosenOption({
@@ -22,10 +27,12 @@ export default function Home() {
         category:option.foodCategory,
         kcal:nutrient.value
     })
+    setDisplayOk(false)
   }
 
   const showResult = async () => {
     try{
+        setDisplayOk(true)
         const response = await axios.get(`https://api.nal.usda.gov/fdc/v1/foods/search?api_key=3nfVd5dGrcppdxcvsNUAh8ZqVeE7xZBfeXMLBZUq&query=${search}`)
         setResult(response.data.foods)
         console.log(response.data.foods)
@@ -34,13 +41,12 @@ export default function Home() {
         console.log(error);
       }
     }
-  
+
+
+
     return (
     <SafeAreaView style={styles.container}>
     
-    <SavedRecipes historyRecipe={historyRecipe} setHistoryRecipe={setHistoryRecipe}/>
-    <ActualRecipe chosenOption={chosenOption} setChosenOption={setChosenOption} setHistoryRecipe={setHistoryRecipe}/>
-
       <Text style={styles.title}>Search a food or ingredient</Text>
 
       <TextInput
@@ -55,7 +61,7 @@ export default function Home() {
         <Text style={styles.textStyleButton}>&#128270;</Text>
     </Pressable>
 
-    {result.length>1 && result.map((option)=>(
+    {result.length>1 && displayOk && result.map((option)=>(
         option.foodNutrients.map((nutrient)=>(
         nutrient.unitName == 'KCAL'&&
         <Pressable style={styles.optionResult} onPress={()=>{saveInActualSearch(option, nutrient)}}>
@@ -69,9 +75,15 @@ export default function Home() {
         </Text>
         <Text>{nutrient.value} {nutrient.unitName}</Text>
     </Pressable>))))}
+    
+    <View style={styles.bottomBar}>
+    <SavedRecipes/>      
+    <ActualRecipe chosenOption={chosenOption} historyRecipe={historyRecipe} setHistoryRecipe={setHistoryRecipe}/>
+    </View>
 
     </SafeAreaView>
   );
+
 }
 
 
@@ -98,6 +110,9 @@ const styles = StyleSheet.create({
     textAlign:'center',
     fontSize:30,
   },
+  bottomBar:{
+    flex:1,
+  }
 });
 
 

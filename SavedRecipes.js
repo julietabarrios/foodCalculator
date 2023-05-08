@@ -3,7 +3,7 @@ import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View} from 'react-nati
 
 
 const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
-    const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(true);
 
     const openModal =()=>{
         setModalVisible(true)

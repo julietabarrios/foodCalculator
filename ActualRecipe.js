@@ -5,7 +5,8 @@ import { Button, TextInput } from 'react-native-paper';
 
 const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe}) => {
     const [modalVisible, setModalVisible] = useState(false);
-    const [actualRecipe, setActualRecipe]=useState([{name:''}])
+    const [actualRecipe, setActualRecipe]=useState([])
+    const [actualRecipeWName,setActualRecipeWName]=useState({})
     const [nameReceipe, setNameReceipe]= useState("")
     const [message, setMessage]= useState('')
 
@@ -36,8 +37,9 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe}) => {
                 style={styles.text}
                 key={i}>KCAL: {food.kcal}
             </Text>
-            <Button title='Delete from receipe' onPress={()=>{deleteFromReceipe(i)}}/>
-            
+            <Pressable style={[styles.button, styles.buttonOpen]} onPress={()=>{deleteFromReceipe(i)}}>
+              <Text>&#128465;</Text>
+            </Pressable>
         </View>
         ))
       )
@@ -55,10 +57,12 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe}) => {
       const saveToHistory = ()=>{
         if (nameReceipe!=''){
           const temp = [...historyRecipe]
-          temp.push(actualRecipe)
+          temp.push(actualRecipeWName)
           setHistoryRecipe(temp)
           openCloseModal()
-          setActualRecipe([])}
+          setActualRecipe([])
+          setActualRecipeWName({})
+        }
         else{
           setMessage('Before saving you should input a receipe name')
           setTimeout(() => {
@@ -68,7 +72,8 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe}) => {
       }
 
       const handleNameReceipe = (text)=>{
-        actualRecipe([...{name:nameReceipe}])
+        setNameReceipe(text)
+        setActualRecipeWName({nameReceipe:[...actualRecipe]})
       }
 
   return (
@@ -98,13 +103,18 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe}) => {
           style={styles.input}
           onChangeText={(text) => handleNameReceipe(text)}
           value={nameReceipe}/>}
+
+          {actualRecipe.length < 1 && <Text>There aren't saved ingredients</Text>}
           {actualRecipe.length > 1 && <Text style={styles.modalText}>Edit your receipe</Text>}
           {actualRecipe.length > 1 && displayActualRecipe()}
           {actualRecipe.length > 1 && <Text>{actualRecipe.reduce((total,receipe)=>(total + receipe.kcal),0)}</Text>}
-          {actualRecipe.length < 1 && <Text>There aren't saved ingredients</Text>}
           <Text>{message}</Text>
-        <Button onPress={saveToHistory} title='Save receipe'/>
-        <Button onPress={deleteAll} title='Delelte all the receipe'/>
+        <Pressable onPress={saveToHistory} style={[styles.button, styles.buttonClose]}>
+        <Text style={styles.textStyleButton}>Save Receipe</Text> 
+        </Pressable>
+        <Pressable onPress={deleteAll} style={[styles.button, styles.buttonClose]}>
+        <Text style={styles.textStyleButton}>Delelte all the receipe</Text> 
+        </Pressable>
         </View>
       </Modal>
 
