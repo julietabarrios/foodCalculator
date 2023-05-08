@@ -24,7 +24,6 @@ export default function Home() {
   const [successMessage, setSuccessMessage]= useState('')
 
 
-
   const showInputQty = (option,nutrient)=>{
     setModalVisible(true)
     setInfo({option:option,nutrient:nutrient})

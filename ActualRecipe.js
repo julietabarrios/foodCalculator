@@ -18,7 +18,7 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
         if(chosenOption.description != ""){
         const temp = [...actualRecipe.ingredients]
         temp.push(chosenOption)
-        setActualRecipe({ingredients:temp})
+        setActualRecipe({...actualRecipe,ingredients:temp})
         console.log(chosenOption)
         console.log(actualRecipe);
       }
@@ -47,6 +47,10 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
         ))
       )
 
+      const handleNameReceipe = (text)=>{
+        setActualRecipe({...actualRecipe, name: text})
+      }
+
       const deleteFromReceipe = (i)=>{
         const temp=[actualRecipe.ingredients]
         temp.splice(i,1)
@@ -58,6 +62,7 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
       }
 
       const saveToHistory = ()=>{
+        console.log(actualRecipe);
         if (actualRecipe.name!=''){
           // SET HISTORY RECIPE HERE IN A USE EFFECT
           const temp = [...historyRecipe]
@@ -78,9 +83,6 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
         }
       }
 
-      const handleNameReceipe = (text)=>{
-        setActualRecipe({...actualRecipe, name: text})
-      }
 
   return (
     <SafeAreaView>

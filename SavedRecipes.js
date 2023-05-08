@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View} from 'react-native'
+import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View, LogBox} from 'react-native'
 import AllRecipeSaved from './AllRecipeSaved'
 
 
@@ -18,7 +18,7 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
           <View style={styles.receipeSaved}>
           <Text 
               style={styles.text}
-              key={i}>Receipe: {receipe.name}
+              >Receipe: {receipe.name}
           </Text>
           <Pressable style={[styles.buttonSavedRecipe, styles.buttonSeeMore]} onPress={()=>{displayAllReceipe(i)}}>
             <Text>See more</Text>
@@ -32,7 +32,7 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
 
     const deleteFromHistory = (i)=>{
       const temp = [...historyRecipe]
-      temp.splice(1,i)
+      temp.splice(i,1)
       setHistoryRecipe(temp)
     }
 
