@@ -62,7 +62,6 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
       const saveToHistory = ()=>{
         console.log(actualRecipe);
         if (actualRecipe.name!=''){
-          // SET HISTORY RECIPE HERE IN A USE EFFECT
           const temp = [...historyRecipe]
           temp.push(actualRecipe)
           setHistoryRecipe(temp)
@@ -81,15 +80,15 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
         }
       }
 
-
+      useEffect(
+        () => {
       const _storeData = async () => {
         try {
-          // we need to stringify our array into a string
-          await AsyncStorage.setItem('dataNumbers', JSON.stringify(data) );
-        } catch (error) {
-          // Error saving data
-        }
+          await AsyncStorage.setItem('historyRecipe', JSON.stringify(historyRecipe) );
+        } catch (error) {}
       };
+      _storeData()
+    },[]);
     
 
 

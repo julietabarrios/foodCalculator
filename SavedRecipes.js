@@ -1,6 +1,7 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View, LogBox} from 'react-native'
 import AllRecipeSaved from './AllRecipeSaved'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
@@ -12,6 +13,29 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
     }
 
     // structure of each recipe (actual recipe) {name:"", ingredients: [{desc:"",cat:"",kcal:""},{desc:"",cat:"",kcal:""}]}
+
+    useEffect(
+      () => {
+        const _storeData = async () => {
+          try {
+            await AsyncStorage.setItem('historyRecipe', JSON.stringify(historyRecipe) );
+          } catch (error) {}
+        };
+    _storeData()
+  },[historyRecipe]);
+
+  useEffect(
+    () => {
+  const _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('historyRecipe');
+      let bringBackToObj= JSON.parse(value)
+      setHistoryRecipe(bringBackToObj)
+  } catch (error) {}
+  };
+  _retrieveData()
+},[]);
+
 
     const displayhistoryRecipe = () => (
       historyRecipe.map((recipe, i)=>(
