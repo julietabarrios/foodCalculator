@@ -11,7 +11,7 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
         setModalVisible(true)
     }
 
-    // {name:"", ingredients: []}
+    // structure of each recipe (actual recipe) {name:"", ingredients: [{desc:"",cat:"",kcal:""},{desc:"",cat:"",kcal:""}]}
 
     const displayhistoryReceipe = () => (
       historyRecipe.map((receipe, i)=>(
@@ -20,9 +20,7 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
               style={styles.text}
               >Receipe: {receipe.name}
           </Text>
-          <Pressable style={[styles.buttonSavedRecipe, styles.buttonSeeMore]} onPress={()=>{displayAllReceipe(i)}}>
-            <Text>See more</Text>
-          </Pressable>
+          <AllRecipeSaved i={i} historyRecipe={historyRecipe}/>
           <Pressable style={[styles.buttonSavedRecipe, styles.buttonDelete]} onPress={()=>{deleteFromHistory(i)}}>
             <Text>&#128465;</Text>
           </Pressable>
@@ -36,11 +34,6 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
       setHistoryRecipe(temp)
     }
 
-    const displayAllReceipe = (i)=>{
-      <AllRecipeSaved index={i}/>
-    }
-
-
   return (
     <SafeAreaView>
     <Pressable
@@ -48,6 +41,7 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
         onPress={openModal}>
         <Text style={styles.textStyleButton}>Saved Recipes</Text>
     </Pressable>
+
     <Modal
     animationType="slide"
     transparent={true}
@@ -61,7 +55,8 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
             onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.textStyleButton}>x</Text>
     </Pressable>
-    <Text style={[styles.modalText]}>Your saved recipes</Text>
+    { historyRecipe.length > 0 && <Text style={[styles.modalText]}>Your saved recipes</Text>}
+    { historyRecipe.length < 1 && <Text style={[styles.modalText]}>There aren't saved recipes</Text>}
     {displayhistoryReceipe()}
     </View>
     </Modal>

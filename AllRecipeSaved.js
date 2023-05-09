@@ -4,6 +4,9 @@ import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View} from 'react-nati
 function AllRecipeSaved({i, historyRecipe}) {
   const [modalVisible, setModalVisible] = useState(false);
 
+  const openModal =()=>{
+    setModalVisible(true)}
+
   return (
     <SafeAreaView>
     <Pressable
@@ -22,6 +25,7 @@ function AllRecipeSaved({i, historyRecipe}) {
             onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.textStyleButton}>x</Text>
         </Pressable>
+
       {historyRecipe[i].ingredients.map((ingredient)=>(
         <View>
         <Text 
@@ -38,6 +42,7 @@ function AllRecipeSaved({i, historyRecipe}) {
         </Text>
         </View> 
     ))}
+    <Text>Total kcal: {historyRecipe[i].ingredients.reduce((total,food)=>(total + food.kcal),0)}</Text>
     </View>
     </Modal>
     </SafeAreaView>

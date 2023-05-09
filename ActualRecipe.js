@@ -8,7 +8,6 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
     const [actualRecipe, setActualRecipe]=useState({name:"", ingredients: []})
     const [message, setMessage]= useState('')
     
-
     const openCloseModal =()=>{
         setModalVisible(!modalVisible)
     }
@@ -75,7 +74,7 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
             setSuccessMessage('');
           }, 4000);
         }
-        else{
+        else if (actualRecipe.ingredients.length>0){
           setMessage('Before saving you should input a receipe name')
           setTimeout(() => {
             setMessage('');
@@ -115,15 +114,15 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
           {actualRecipe.ingredients.length < 1 && <Text>There aren't saved ingredients</Text>}
           {actualRecipe.ingredients.length > 0 && <Text style={styles.modalText}>Edit your receipe</Text>}
           {actualRecipe.ingredients.length > 0 && displayActualRecipe()}
-          {actualRecipe.ingredients.length > 0 && <Text>{actualRecipe.ingredients.reduce((total,food)=>(total + food.kcal),0)}</Text>}
+          {actualRecipe.ingredients.length > 0 && <Text>Total kcal: {actualRecipe.ingredients.reduce((total,food)=>(total + food.kcal),0)}</Text>}
           <Text>{message}</Text>
 
-        <Pressable onPress={saveToHistory} style={[styles.button, styles.buttonClose]}>
+        {actualRecipe.ingredients.length >0 && <Pressable onPress={saveToHistory} style={[styles.button, styles.buttonClose]}>
         <Text style={styles.textStyleButton}>Save Receipe</Text> 
-        </Pressable>
-        <Pressable onPress={deleteAll} style={[styles.button, styles.buttonClose]}>
+        </Pressable>}
+        {actualRecipe.ingredients.length >0 &&<Pressable onPress={deleteAll} style={[styles.button, styles.buttonClose]} >
         <Text style={styles.textStyleButton}>Delelte all the receipe</Text> 
-        </Pressable>
+        </Pressable>}
         </View>
       </Modal>
 
