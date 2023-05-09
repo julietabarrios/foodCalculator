@@ -5,6 +5,7 @@ import SavedRecipes from './SavedRecipes';
 import ActualRecipe from './ActualRecipe';
 
 
+
 export default function Home() {
     const [search, setSearch] = useState('')
     const [result, setResult]=useState([])
@@ -60,6 +61,10 @@ export default function Home() {
       }
     }
 
+    const deleteSearch = ()=>{
+      setResult([])
+      setSearch("")
+    }
     return (
 
     <SafeAreaView style={styles.container}>
@@ -76,12 +81,18 @@ export default function Home() {
         value={search}
    />
     <Pressable
-        style={[styles.button]}
+        style={[styles.buttonSearching]}
         onPress={showResult}>
-        <Text style={styles.textStyleButton}>&#128270;</Text>
+        <Text style={styles.textStyleButtonSearching}>&#128270;</Text>
     </Pressable>
     </View>
     
+    {result.length>1 && displayOk && <Pressable 
+      style={styles.buttonClose}
+      onPress={deleteSearch}>
+      <Text style={styles.textStyleButton}>x</Text>
+    </Pressable>}
+
     <ScrollView style={styles.scrollView}>
     <View style={styles.results}>
     {result.length>1 && displayOk && result.map((option)=>(
@@ -100,25 +111,29 @@ export default function Home() {
     </Pressable>))))}
     </View>
     </ScrollView>
-
+    <View style={styles.centeredView}>
     <Modal 
+    animationType="slide"
     transparent={true}
     visible={modalVisible}
     >
-      <View style={[styles.modalView, styles.centeredView]}>
+      <View style={styles.centeredView}>
+      <View style={styles.modalView}>
+
       <Pressable
             style={[styles.button, styles.buttonClose]}
             onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.textStyleButton}>x</Text>
     </Pressable>
-
+      <Text style={styles.titleModal}>Quantity of the ingredient</Text>
       <TextInput
-        style={styles.input}
+        style={styles.inputQty}
+        placeholder='g'
         onChangeText={(number) => setQty(Number(number))}
         value={qty}/>
-
+    
       {!isNaN(Number(qty)) && qty != "" && <Pressable
-            style={[styles.button, styles.buttonClose]}
+            style={[styles.button, styles.buttonSave]}
             onPress={() => saveInActualSearch()}>
             <Text style={styles.textStyleButton}>Save</Text>
       </Pressable>}
@@ -126,7 +141,9 @@ export default function Home() {
     { isNaN(Number(qty)) && <Text>Invalid quantity provided. You must input a number of grames</Text>}
     {qty == "" && <Text>Provide a number of grames</Text>}
     </View>
+    </View>
     </Modal>
+    </View>
     <Text>{message}</Text>
     <Text>{successMessage}</Text>
     
@@ -142,15 +159,27 @@ const styles = StyleSheet.create({
     justifyContent:'center',
   },
   optionResult:{
-    borderColor:'#008080',
+    borderColor:'#80DC37',
     borderStyle:'solid',
+    borderRadius:10,
     borderWidth:1,
+    padding:13,
+    margin:7,
+  },
+  inputQty:{
+    alignSelf:'center',
+    borderStyle: "solid",
+    borderColor:"black",
+    borderWidth:3,
+    height:30,
+    width:100,
+    marginBottom:15,
   },
   input:{
     borderStyle: "solid",
     borderColor:"black",
     borderWidth:3,
-    width:350,
+    width:310,
     height:50,
     marginLeft:5,
     marginRight:5,
@@ -164,6 +193,7 @@ const styles = StyleSheet.create({
   title:{
     textAlign:'center',
     fontSize:30,
+    letterSpacing:5,
   },
   topBar:{
     flex:1,
@@ -171,17 +201,8 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignItems:'flex-start'
   },
-  results:{
-  },
   scrollView:{
     height:250,
-
-  },
-  centeredView: {
-    flex: 1,
-    marginTop: 22,
-    justifyContent:'flex-start',
-    alignItems:'flex-start'
   },
   modalView: {
     margin: 20,
@@ -197,10 +218,41 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
   },
+  buttonClose:{
+    borderRadius:10,
+    backgroundColor:'black',
+    width:20,
+    marginBottom:10,
+  },
+  buttonSave:{
+    borderRadius:10,
+    backgroundColor:'black',
+    width:60,
+    height:20,
+    alignSelf:'center',
+  },
+  textStyleButton:{
+    color:'white',
+    textAlign:'center'
+  },
+  titleModal:{
+    fontSize:20,
+    marginBottom:20,
+    textAlign:'center',
+  },
+  textStyleButtonSearching:{
+    fontSize:35,
+  }
 });
 
 

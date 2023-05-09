@@ -174,13 +174,14 @@ const styles = StyleSheet.create({
     textStyleButton: {
       color: 'white',
       fontWeight: 'bold',
-      textAlign:'center'
+      textAlign:'center',
+  
     },
     buttonOpen:{
       width:250,
-      marginTop:20,
+      height:40,
     },
-      modalText: {
+    modalText: {
       marginBottom: 15,
       textAlign: 'center',
     },

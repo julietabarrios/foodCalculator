@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
       },
     buttonOpen:{
       width:250,
-      marginTop:20,
+      height:40,
     },
       modalText: {
       marginBottom: 15,

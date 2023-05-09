@@ -13,14 +13,12 @@
     },
     "jsEngine": "hermes",
     "ios": {
-      "jsEngine": "jsc"
+      "jsEngine": "jsc",
+      "supportsTablet": true
     },
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -29,11 +27,6 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "splash": {
-      "image":"./assets/splash.png",
-       "backgroundColor": "#FFFFFF",
-       "resizeMode": "contain"
-      }
+    }
   }
 }
