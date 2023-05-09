@@ -12,6 +12,7 @@ export default function Home() {
     const [chosenOption,setChosenOption]=useState({
         description:'',
         category:'',
+        qty:'',
         kcal:''
     })
   const [historyRecipe, setHistoryRecipe]= useState([])
@@ -35,6 +36,7 @@ export default function Home() {
     setChosenOption({
         description: info.option.description,
         category:info.option.foodCategory,
+        qty:qty,
         kcal:(qty*info.nutrient.value)/100
     })
     setModalVisible(false)
@@ -93,7 +95,7 @@ export default function Home() {
             style={styles.text}
             >Category: {option.foodCategory}
         </Text>
-        <Text>{nutrient.value} {nutrient.unitName}</Text>
+        <Text>{nutrient.value} {nutrient.unitName}/100g</Text>
     </Pressable>))))}
     </View>
 

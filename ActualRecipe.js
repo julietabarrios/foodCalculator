@@ -36,7 +36,11 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
             </Text>
             <Text 
                 style={styles.text}
-                key={i}>KCAL: {food.kcal}
+                key={i}>Quantity: {food.qty}g
+            </Text>
+            <Text 
+                style={styles.text}
+                key={i}>Energy: {food.kcal} kcal
             </Text>
             <Pressable style={[styles.button, styles.buttonOpen]} onPress={()=>{deleteFromRecipe(i)}}>
               <Text>&#128465;</Text>
@@ -117,7 +121,8 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
           {actualRecipe.ingredients.length < 1 && <Text>There aren't saved ingredients</Text>}
           {actualRecipe.ingredients.length > 0 && <Text style={styles.modalText}>Edit your Recipe</Text>}
           {actualRecipe.ingredients.length > 0 && displayActualRecipe()}
-          {actualRecipe.ingredients.length > 0 && <Text>Total kcal: {actualRecipe.ingredients.reduce((total,food)=>(total + food.kcal),0)}</Text>}
+          {actualRecipe.ingredients.length > 0 && <Text>Total energy: {actualRecipe.ingredients.reduce((total,food)=>(total + food.kcal),0)} kcal</Text>}
+          {actualRecipe.ingredients.length > 0 && <Text>Total quantity: {actualRecipe.ingredients.reduce((total,food)=>(total + food.qty),0)}g</Text>}
           <Text>{message}</Text>
 
         {actualRecipe.ingredients.length >0 && <Pressable onPress={saveToHistory} style={[styles.button, styles.buttonClose]}>

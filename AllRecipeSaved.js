@@ -37,12 +37,17 @@ function AllRecipeSaved({i, historyRecipe}) {
             >Category: {ingredient.category}
         </Text>
         <Text 
+              style={styles.text}
+              >Quantity: {ingredient.qty}g
+        </Text>
+        <Text 
             style={styles.text}
-            >KCAL: {ingredient.kcal}
+            >Energy: {ingredient.kcal} kcal
         </Text>
         </View> 
     ))}
-    <Text>Total kcal: {historyRecipe[i].ingredients.reduce((total,food)=>(total + food.kcal),0)}</Text>
+    <Text>Total energy: {historyRecipe[i].ingredients.reduce((total,food)=>(total + food.kcal),0)} kcal</Text>
+    <Text>Total quantity: {historyRecipe[i].ingredients.reduce((total,food)=>(total + food.qty),0)}g</Text>
     </View>
     </Modal>
     </SafeAreaView>
