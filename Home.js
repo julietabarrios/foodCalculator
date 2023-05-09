@@ -1,9 +1,8 @@
 import React, {useState,useEffect} from 'react'
 import axios from 'axios';
-import { StyleSheet, Text, View, TextInput, SafeAreaView, Modal, Pressable } from 'react-native';
+import { StyleSheet, Text, View, TextInput, SafeAreaView, Modal, Pressable, ScrollView } from 'react-native';
 import SavedRecipes from './SavedRecipes';
 import ActualRecipe from './ActualRecipe';
-
 
 
 export default function Home() {
@@ -62,13 +61,14 @@ export default function Home() {
     }
 
     return (
+
     <SafeAreaView style={styles.container}>
     <View style={styles.topBar}>
     <SavedRecipes historyRecipe={historyRecipe} setHistoryRecipe={setHistoryRecipe}/>      
     <ActualRecipe chosenOption={chosenOption} historyRecipe={historyRecipe} setHistoryRecipe={setHistoryRecipe} setSuccessMessage={setSuccessMessage}/>
     </View>
 
-      <Text style={styles.title}>Search for an ingredient</Text>
+      <Text style={styles.title}>SEARCH FOR AN INGREDIENT</Text>
     <View style={styles.inputPart}>
       <TextInput
         style={styles.input}
@@ -81,7 +81,8 @@ export default function Home() {
         <Text style={styles.textStyleButton}>&#128270;</Text>
     </Pressable>
     </View>
-
+    
+    <ScrollView style={styles.scrollView}>
     <View style={styles.results}>
     {result.length>1 && displayOk && result.map((option)=>(
         option.foodNutrients.map((nutrient)=>(
@@ -98,6 +99,7 @@ export default function Home() {
         <Text>{nutrient.value} {nutrient.unitName}/100g</Text>
     </Pressable>))))}
     </View>
+    </ScrollView>
 
     <Modal 
     transparent={true}
@@ -134,14 +136,13 @@ export default function Home() {
 
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex:1,
     justifyContent:'center',
   },
   optionResult:{
-    borderColor:'#8FBC8F',
+    borderColor:'#008080',
     borderStyle:'solid',
     borderWidth:1,
   },
@@ -171,7 +172,10 @@ const styles = StyleSheet.create({
     alignItems:'flex-start'
   },
   results:{
-    height:90,
+  },
+  scrollView:{
+    height:250,
+
   },
   centeredView: {
     flex: 1,

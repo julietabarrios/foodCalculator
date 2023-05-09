@@ -107,30 +107,35 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
           setModalVisible(!modalVisible);
         }}>
         <View style={[styles.modalView, styles.centeredView]}>
+          
         <Pressable
             style={[styles.button, styles.buttonClose]}
             onPress={openCloseModal}>
             <Text style={styles.textStyleButton}>x</Text>
         </Pressable>
-          {actualRecipe.ingredients.length > 0 && 
-          <TextInput 
-          style={styles.input}
-          onChangeText={(text) => handleNameRecipe(text)}
-          value={actualRecipe.name}/>}
 
           {actualRecipe.ingredients.length < 1 && <Text>There aren't saved ingredients</Text>}
-          {actualRecipe.ingredients.length > 0 && <Text style={styles.modalText}>Edit your Recipe</Text>}
-          {actualRecipe.ingredients.length > 0 && displayActualRecipe()}
-          {actualRecipe.ingredients.length > 0 && <Text>Total energy: {actualRecipe.ingredients.reduce((total,food)=>(total + food.kcal),0)} kcal</Text>}
-          {actualRecipe.ingredients.length > 0 && <Text>Total quantity: {actualRecipe.ingredients.reduce((total,food)=>(total + food.qty),0)}g</Text>}
-          <Text>{message}</Text>
+        
+          {actualRecipe.ingredients.length > 0 && 
+            <View>
+            <Text style={styles.modalText}>Edit your Recipe</Text>
+            <TextInput 
+            style={styles.input}
+            placeholder='Name of your recipe'
+            onChangeText={(text) => handleNameRecipe(text)}
+            value={actualRecipe.name}/>
+            {displayActualRecipe()}
+            <Text>Total energy: {actualRecipe.ingredients.reduce((total,food)=>(total + food.kcal),0)} kcal</Text>
+            <Text>Total quantity: {actualRecipe.ingredients.reduce((total,food)=>(total + food.qty),0)}g</Text>
+            <Text>{message}</Text>
+            <Pressable onPress={saveToHistory} style={[styles.button, styles.buttonClose]}>
+            <Text style={styles.textStyleButton}>Save Recipe</Text> 
+            </Pressable>
+            <Pressable onPress={deleteAll} style={[styles.button, styles.buttonClose]} >
+            <Text style={styles.textStyleButton}>Delelte all the Recipe</Text> 
+            </Pressable>
+            </View>}
 
-        {actualRecipe.ingredients.length >0 && <Pressable onPress={saveToHistory} style={[styles.button, styles.buttonClose]}>
-        <Text style={styles.textStyleButton}>Save Recipe</Text> 
-        </Pressable>}
-        {actualRecipe.ingredients.length >0 &&<Pressable onPress={deleteAll} style={[styles.button, styles.buttonClose]} >
-        <Text style={styles.textStyleButton}>Delelte all the Recipe</Text> 
-        </Pressable>}
         </View>
       </Modal>
 
