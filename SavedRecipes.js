@@ -13,12 +13,12 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
 
     // structure of each recipe (actual recipe) {name:"", ingredients: [{desc:"",cat:"",kcal:""},{desc:"",cat:"",kcal:""}]}
 
-    const displayhistoryReceipe = () => (
-      historyRecipe.map((receipe, i)=>(
-          <View style={styles.receipeSaved}>
+    const displayhistoryRecipe = () => (
+      historyRecipe.map((recipe, i)=>(
+          <View style={styles.recipeSaved}>
           <Text 
               style={styles.text}
-              >Receipe: {receipe.name}
+              >Recipe: {recipe.name}
           </Text>
           <AllRecipeSaved i={i} historyRecipe={historyRecipe}/>
           <Pressable style={[styles.buttonSavedRecipe, styles.buttonDelete]} onPress={()=>{deleteFromHistory(i)}}>
@@ -57,7 +57,7 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
     </Pressable>
     { historyRecipe.length > 0 && <Text style={[styles.modalText]}>Your saved recipes</Text>}
     { historyRecipe.length < 1 && <Text style={[styles.modalText]}>There aren't saved recipes</Text>}
-    {displayhistoryReceipe()}
+    {displayhistoryRecipe()}
     </View>
     </Modal>
     </SafeAreaView>
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
       width:70,
       marginTop:10,
     },
-    receipeSaved:{
+    recipeSaved:{
       flex:1,
       flexDirection:'row',
       alignItems:'center',

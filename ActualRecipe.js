@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react'
 import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View} from 'react-native'
-import { Button, TextInput } from 'react-native-paper';
+import {TextInput } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccessMessage}) => {
@@ -18,8 +19,6 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
         const temp = [...actualRecipe.ingredients]
         temp.push(chosenOption)
         setActualRecipe({...actualRecipe,ingredients:temp})
-        console.log(chosenOption)
-        console.log(actualRecipe);
       }
       },[chosenOption]);
 
@@ -39,18 +38,18 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
                 style={styles.text}
                 key={i}>KCAL: {food.kcal}
             </Text>
-            <Pressable style={[styles.button, styles.buttonOpen]} onPress={()=>{deleteFromReceipe(i)}}>
+            <Pressable style={[styles.button, styles.buttonOpen]} onPress={()=>{deleteFromRecipe(i)}}>
               <Text>&#128465;</Text>
             </Pressable>
         </View>
         ))
       )
 
-      const handleNameReceipe = (text)=>{
+      const handleNameRecipe = (text)=>{
         setActualRecipe({...actualRecipe, name: text})
       }
 
-      const deleteFromReceipe = (i)=>{
+      const deleteFromRecipe = (i)=>{
         const temp=[actualRecipe.ingredients]
         temp.splice(i,1)
         setActualRecipe({...actualRecipe, ingredients:temp})
@@ -75,12 +74,23 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
           }, 4000);
         }
         else if (actualRecipe.ingredients.length>0){
-          setMessage('Before saving you should input a receipe name')
+          setMessage('Before saving you should input a recipe name')
           setTimeout(() => {
             setMessage('');
           }, 4000);
         }
       }
+
+
+      const _storeData = async () => {
+        try {
+          // we need to stringify our array into a string
+          await AsyncStorage.setItem('dataNumbers', JSON.stringify(data) );
+        } catch (error) {
+          // Error saving data
+        }
+      };
+    
 
 
   return (
@@ -108,20 +118,20 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
           {actualRecipe.ingredients.length > 0 && 
           <TextInput 
           style={styles.input}
-          onChangeText={(text) => handleNameReceipe(text)}
+          onChangeText={(text) => handleNameRecipe(text)}
           value={actualRecipe.name}/>}
 
           {actualRecipe.ingredients.length < 1 && <Text>There aren't saved ingredients</Text>}
-          {actualRecipe.ingredients.length > 0 && <Text style={styles.modalText}>Edit your receipe</Text>}
+          {actualRecipe.ingredients.length > 0 && <Text style={styles.modalText}>Edit your Recipe</Text>}
           {actualRecipe.ingredients.length > 0 && displayActualRecipe()}
           {actualRecipe.ingredients.length > 0 && <Text>Total kcal: {actualRecipe.ingredients.reduce((total,food)=>(total + food.kcal),0)}</Text>}
           <Text>{message}</Text>
 
         {actualRecipe.ingredients.length >0 && <Pressable onPress={saveToHistory} style={[styles.button, styles.buttonClose]}>
-        <Text style={styles.textStyleButton}>Save Receipe</Text> 
+        <Text style={styles.textStyleButton}>Save Recipe</Text> 
         </Pressable>}
         {actualRecipe.ingredients.length >0 &&<Pressable onPress={deleteAll} style={[styles.button, styles.buttonClose]} >
-        <Text style={styles.textStyleButton}>Delelte all the receipe</Text> 
+        <Text style={styles.textStyleButton}>Delelte all the Recipe</Text> 
         </Pressable>}
         </View>
       </Modal>
