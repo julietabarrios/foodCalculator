@@ -60,11 +60,11 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
       }
 
       const saveToHistory = ()=>{
-        console.log(actualRecipe);
         if (actualRecipe.name!=''){
           const temp = [...historyRecipe]
           temp.push(actualRecipe)
           setHistoryRecipe(temp)
+          _storeData(temp)
           openCloseModal()
           setActualRecipe({name:"", ingredients: []})
           setSuccessMessage('The recipe was successfully added to your history!')
@@ -80,17 +80,11 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
         }
       }
 
-      useEffect(
-        () => {
-      const _storeData = async () => {
+      const _storeData = async (x) => {
         try {
-          await AsyncStorage.setItem('historyRecipe', JSON.stringify(historyRecipe) );
+          await AsyncStorage.setItem('historyRecipe', JSON.stringify(x));
         } catch (error) {}
       };
-      _storeData()
-    },[]);
-    
-
 
   return (
     <SafeAreaView>

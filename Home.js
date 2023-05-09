@@ -12,7 +12,7 @@ export default function Home() {
     const [chosenOption,setChosenOption]=useState({
         description:'',
         category:'',
-        kcal:0
+        kcal:''
     })
   const [historyRecipe, setHistoryRecipe]= useState([])
   const [displayOk, setDisplayOk]= useState(true)
@@ -31,7 +31,7 @@ export default function Home() {
   }
 
   const saveInActualSearch = ()=>{
-    if (typeof qty =='number'){
+    if (!isNaN(Number(qty))){
     setChosenOption({
         description: info.option.description,
         category:info.option.foodCategory,
@@ -113,13 +113,14 @@ export default function Home() {
         onChangeText={(number) => setQty(Number(number))}
         value={qty}/>
 
-      <Pressable
+      {!isNaN(Number(qty)) && qty != "" && <Pressable
             style={[styles.button, styles.buttonClose]}
             onPress={() => saveInActualSearch()}>
             <Text style={styles.textStyleButton}>Save</Text>
-      </Pressable>
+      </Pressable>}
 
-    {(typeof qty)!='number'&& <Text>Invalid quantity provided. You must input a number of grames</Text>}
+    { isNaN(Number(qty)) && <Text>Invalid quantity provided. You must input a number of grames</Text>}
+    {qty == "" && <Text>Provide a number of grames</Text>}
     </View>
     </Modal>
     <Text>{message}</Text>

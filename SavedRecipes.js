@@ -14,15 +14,11 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
 
     // structure of each recipe (actual recipe) {name:"", ingredients: [{desc:"",cat:"",kcal:""},{desc:"",cat:"",kcal:""}]}
 
-    useEffect(
-      () => {
-        const _storeData = async () => {
-          try {
-            await AsyncStorage.setItem('historyRecipe', JSON.stringify(historyRecipe) );
-          } catch (error) {}
-        };
-    _storeData()
-  },[historyRecipe]);
+    const _storeData = async (x) => {
+      try {
+        await AsyncStorage.setItem('historyRecipe', JSON.stringify(x));
+      } catch (error) {}
+    };
 
   useEffect(
     () => {
@@ -56,6 +52,7 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
       const temp = [...historyRecipe]
       temp.splice(i,1)
       setHistoryRecipe(temp)
+      _storeData(temp)
     }
 
   return (
