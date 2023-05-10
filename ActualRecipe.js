@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react'
-import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View} from 'react-native'
+import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View, ScrollView} from 'react-native'
 import {TextInput } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -26,6 +26,7 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
       const displayActualRecipe = () => (
         actualRecipe.ingredients.map((food, i)=>(
             <View style={styles.optionResult}>
+            <View style={styles.textIngredient}>
             <Text 
                 style={styles.text}
                 key={i}>Food: {food.description}
@@ -42,7 +43,8 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
                 style={styles.text}
                 key={i}>Energy: {food.kcal} kcal
             </Text>
-            <Pressable style={[styles.button, styles.buttonOpen]} onPress={()=>{deleteFromRecipe(i)}}>
+            </View>
+            <Pressable style={[styles.buttonDeleteOne]} onPress={()=>{deleteFromRecipe(i)}}>
               <Text>&#128465;</Text>
             </Pressable>
         </View>
@@ -106,7 +108,8 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
           Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
-        <View style={[styles.modalView, styles.centeredView]}>
+        <View style={styles.centeredView}>
+        <View style={styles.modalView}>
           
         <Pressable
             style={[styles.button, styles.buttonClose]}
@@ -114,28 +117,32 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
             <Text style={styles.textStyleButton}>x</Text>
         </Pressable>
 
-          {actualRecipe.ingredients.length < 1 && <Text>There aren't saved ingredients</Text>}
-        
+          {actualRecipe.ingredients.length < 1 && <Text style={styles.noIngredients}>There aren't saved ingredients</Text>}
+          <ScrollView>
           {actualRecipe.ingredients.length > 0 && 
             <View>
-            <Text style={styles.modalText}>Edit your Recipe</Text>
+            <Text style={[styles.modalText,styles.title]}>EDIT YOUR RECIPE</Text>
             <TextInput 
             style={styles.input}
             placeholder='Name of your recipe'
             onChangeText={(text) => handleNameRecipe(text)}
             value={actualRecipe.name}/>
             {displayActualRecipe()}
-            <Text>Total energy: {actualRecipe.ingredients.reduce((total,food)=>(total + food.kcal),0)} kcal</Text>
-            <Text>Total quantity: {actualRecipe.ingredients.reduce((total,food)=>(total + food.qty),0)}g</Text>
+            <View style={styles.totals}>
+            <Text style={styles.total}>TOTAL</Text>
+            <Text style={styles.total}> &#128293;ENERGY - {actualRecipe.ingredients.reduce((total,food)=>(total + food.kcal),0)} kcal</Text>
+            <Text >&#129379; QUANTITY - {actualRecipe.ingredients.reduce((total,food)=>(total + food.qty),0)}g</Text>
+            </View>
             <Text>{message}</Text>
-            <Pressable onPress={saveToHistory} style={[styles.button, styles.buttonClose]}>
+            <Pressable onPress={saveToHistory} style={[styles.button, styles.buttonSaveDelete, styles.buttonSave]}>
             <Text style={styles.textStyleButton}>Save Recipe</Text> 
             </Pressable>
-            <Pressable onPress={deleteAll} style={[styles.button, styles.buttonClose]} >
+            <Pressable onPress={deleteAll} style={[styles.button, styles.buttonSaveDelete, styles.buttonDeleteAll]} >
             <Text style={styles.textStyleButton}>Delelte all the Recipe</Text> 
             </Pressable>
             </View>}
-
+            </ScrollView>
+        </View>    
         </View>
       </Modal>
 
@@ -151,17 +158,44 @@ const styles = StyleSheet.create({
       elevation: 2, 
       backgroundColor: 'black',
     },
+    input:{
+      height:35,
+      width:200,
+      alignSelf:'center',
+      backgroundColor:'white',
+      borderBottomWidth:1,
+      borderColor:'gray',
+      marginBottom:20,
+    },
+    text:{
+      paddingBottom:5,
+    },
+    optionResult:{
+      flex:1,
+      flexDirection:'row',
+      borderColor:'gray',
+      borderWidth:1,
+      borderRadius:10,
+      marginBottom:20,
+      alignItems:'center',
+      justifyContent:'center',
+      padding:22,
+      gap:10,
+    },
     centeredView: {
       flex: 1,
       marginTop: 22,
-      justifyContent:'flex-start',
-      alignItems:'flex-start'
+      justifyContent:'center',
+      alignItems:'center'
+    },
+    title:{
+      fontSize:30,
     },
     modalView: {
       margin: 20,
       backgroundColor: 'white',
       borderRadius: 20,
-      padding: 35,
+      padding: 15,
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
@@ -170,12 +204,13 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.25,
       shadowRadius: 4,
       elevation: 5,
+      height:650,
+      width:350,
     },
     textStyleButton: {
       color: 'white',
       fontWeight: 'bold',
       textAlign:'center',
-  
     },
     buttonOpen:{
       width:250,
@@ -185,4 +220,38 @@ const styles = StyleSheet.create({
       marginBottom: 15,
       textAlign: 'center',
     },
+    buttonClose:{
+      alignSelf:'flex-end',
+      borderRadius:30,
+      height:33,
+      marginBottom:20,
+    },
+    buttonSaveDelete:{
+      borderRadius:20,
+      width:170,
+      alignSelf:'center',
+      marginTop:10,
+    },
+    buttonSave:{
+      backgroundColor:'#80DC37',
+    },
+    buttonDeleteAll:{
+      backgroundColor:'red'
+    },
+    buttonDeleteOne:{
+
+    },
+    total:{
+      fontSize:15,
+      textAlign:'center',
+      paddingBottom:10,
+    },
+    totals:{
+      margin:10,
+      alignSelf:'center'
+    },
+    noIngredients:{
+      fontSize:20,
+      textAlign:'center',
+    }
   });

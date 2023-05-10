@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View, LogBox} from 'react-native'
+import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View, LogBox, ScrollView} from 'react-native'
 import AllRecipeSaved from './AllRecipeSaved'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -35,16 +35,17 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
 
     const displayhistoryRecipe = () => (
       historyRecipe.map((recipe, i)=>(
+  
           <View style={styles.recipeSaved}>
           <Text 
               style={styles.text}
-              >Recipe: {recipe.name}
+              >{recipe.name}
           </Text>
           <AllRecipeSaved i={i} historyRecipe={historyRecipe}/>
-          <Pressable style={[styles.buttonSavedRecipe, styles.buttonDelete]} onPress={()=>{deleteFromHistory(i)}}>
-            <Text>&#128465;</Text>
+          <Pressable style={[styles.buttonDelete]} onPress={()=>{deleteFromHistory(i)}}>
+            <Text style={styles.deleteOne}>&#128465;</Text>
           </Pressable>
-      </View>
+          </View>
       ))
     )
 
@@ -70,17 +71,23 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
     onRequestClose={() => {
       Alert.alert('Modal has been closed.');
       setModalVisible(!modalVisible)}}>
-    <View style={[styles.modalView, styles.centeredView]}>
+
+    <View style={styles.centeredView}>
+    <View style={styles.modalView}>
     <Pressable
             style={[styles.button, styles.buttonClose]}
             onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.textStyleButton}>x</Text>
     </Pressable>
-    { historyRecipe.length > 0 && <Text style={[styles.modalText]}>Your saved recipes</Text>}
-    { historyRecipe.length < 1 && <Text style={[styles.modalText]}>There aren't saved recipes</Text>}
+    { historyRecipe.length > 0 && <Text style={[styles.modalText, styles.title]}>YOUR SAVED RECIPES</Text>}
+    { historyRecipe.length < 1 && <Text style={[styles.modalText, styles.noRecipes]}>There aren't saved recipes</Text>}
+    <ScrollView style={styles.displayHistory}>
     {displayhistoryRecipe()}
+    </ScrollView>
+    </View>
     </View>
     </Modal>
+
     </SafeAreaView>
     )
 }
@@ -93,11 +100,14 @@ const styles = StyleSheet.create({
         elevation: 2, 
         backgroundColor:'black',
       },
+      title:{
+        fontSize:25,
+      },
     centeredView: {
       flex: 1,
       marginTop: 22,
-      justifyContent:'flex-start',
-      alignItems:'flex-start'
+      justifyContent:'center',
+      alignItems:'center'
     },
     modalView: {
       margin: 20,
@@ -112,6 +122,8 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.25,
       shadowRadius: 4,
       elevation: 5,
+      height:650,
+      width:350,
     },
     textStyleButton: {
         color: 'white',
@@ -133,17 +145,42 @@ const styles = StyleSheet.create({
       borderRadius:5
     },
     buttonDelete:{
-      width:30,
-      marginTop:10,
+      
     },
     buttonSeeMore:{
       width:70,
       marginTop:10,
     },
     recipeSaved:{
-      flex:1,
+      flex:3,
       flexDirection:'row',
       alignItems:'center',
-      justifyContent:'center'
+      justifyContent:'space-between',
+      gap:30,
+      borderWidth:1,
+      borderColor:'gray',
+      borderRadius:10,
+      width:260,
+      marginTop:20,
+      padding:10,
+    },
+    buttonClose:{
+      alignSelf:'flex-end',
+      borderRadius:30,
+      height:33,
+      marginBottom:20,
+    },
+    noRecipes:{
+      fontSize:20,
+      textAlign:'center',
+    },
+    deleteOne:{
+      fontSize:25,
+    },
+    text:{
+      fontSize:15,
+    },
+    displayHistory:{
+      alignSelf:'center'
     }
   });

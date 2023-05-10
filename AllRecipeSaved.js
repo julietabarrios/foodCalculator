@@ -12,7 +12,7 @@ function AllRecipeSaved({i, historyRecipe}) {
     <Pressable
         style={[styles.button, styles.buttonOpen]}
         onPress={openModal}>
-        <Text style={styles.textStyleButton}>See details</Text>
+        <Text style={styles.seeMore}>&#128196;</Text>
     </Pressable>
 
     <Modal
@@ -81,4 +81,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
+  seeMore:{
+    fontSize:25,
+  }
 });

@@ -42,6 +42,7 @@ export default function Home() {
     setModalVisible(false)
     setDisplayOk(false)
     setSearch('')
+    setResult([])
     setMessage('The ingredient was successfully saved it!')
     setTimeout(() => {
       setMessage('');
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
     alignItems:'flex-start'
   },
   scrollView:{
-    height:250,
+    height:300,
   },
   modalView: {
     margin: 20,
@@ -233,6 +234,8 @@ const styles = StyleSheet.create({
     backgroundColor:'black',
     width:20,
     marginBottom:10,
+    marginRight:15,
+    alignSelf:'flex-end',
   },
   buttonSave:{
     borderRadius:10,
