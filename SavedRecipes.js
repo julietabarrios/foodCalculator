@@ -41,10 +41,12 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
               style={styles.text}
               >{recipe.name}
           </Text>
+          <View style={styles.buttonsSavedRecipe}>
           <AllRecipeSaved i={i} historyRecipe={historyRecipe}/>
           <Pressable style={[styles.buttonDelete]} onPress={()=>{deleteFromHistory(i)}}>
             <Text style={styles.deleteOne}>&#128465;</Text>
           </Pressable>
+          </View>
           </View>
       ))
     )
@@ -61,7 +63,7 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
     <Pressable
         style={[styles.button, styles.buttonOpen]}
         onPress={openModal}>
-        <Text style={styles.textStyleButton}>Saved Recipes</Text>
+        <Text style={styles.textStyleButton}>SAVED RECIPES</Text>
     </Pressable>
 
     <Modal
@@ -75,9 +77,9 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
     <View style={styles.centeredView}>
     <View style={styles.modalView}>
     <Pressable
-            style={[styles.button, styles.buttonClose]}
+            style={[styles.buttonClose]}
             onPress={() => setModalVisible(!modalVisible)}>
-            <Text style={styles.textStyleButton}>x</Text>
+            <Text style={styles.textStyleButtonCross}>&#10006;</Text>
     </Pressable>
     { historyRecipe.length > 0 && <Text style={[styles.modalText, styles.title]}>YOUR SAVED RECIPES</Text>}
     { historyRecipe.length < 1 && <Text style={[styles.modalText, styles.noRecipes]}>There aren't saved recipes</Text>}
@@ -128,7 +130,13 @@ const styles = StyleSheet.create({
     textStyleButton: {
         color: 'white',
         fontWeight: 'bold',
-        textAlign:'center'
+        textAlign:'center',
+        fontSize:15,
+        letterSpacing:2,
+        paddingLeft:50
+      },
+      textStyleButtonCross: {
+        fontSize:23
       },
     buttonOpen:{
       width:250,
@@ -144,9 +152,6 @@ const styles = StyleSheet.create({
       borderWidth:2,
       borderRadius:5
     },
-    buttonDelete:{
-      
-    },
     buttonSeeMore:{
       width:70,
       marginTop:10,
@@ -155,8 +160,7 @@ const styles = StyleSheet.create({
       flex:3,
       flexDirection:'row',
       alignItems:'center',
-      justifyContent:'space-between',
-      gap:30,
+      gap:20,
       borderWidth:1,
       borderColor:'gray',
       borderRadius:10,
@@ -166,8 +170,6 @@ const styles = StyleSheet.create({
     },
     buttonClose:{
       alignSelf:'flex-end',
-      borderRadius:30,
-      height:33,
       marginBottom:20,
     },
     noRecipes:{
@@ -182,5 +184,12 @@ const styles = StyleSheet.create({
     },
     displayHistory:{
       alignSelf:'center'
+    },
+    buttonsSavedRecipe:{
+      flex:1,
+      flexDirection:'row',
+      gap:20,
+      justifyContent:'flex-end'
     }
+    
   });

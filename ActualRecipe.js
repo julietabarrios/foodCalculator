@@ -22,6 +22,7 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
       }
       },[chosenOption]);
 
+  
 
       const displayActualRecipe = () => (
         actualRecipe.ingredients.map((food, i)=>(
@@ -44,8 +45,8 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
                 key={i}>Energy: {food.kcal} kcal
             </Text>
             </View>
-            <Pressable style={[styles.buttonDeleteOne]} onPress={()=>{deleteFromRecipe(i)}}>
-              <Text>&#128465;</Text>
+            <Pressable onPress={()=>{deleteFromRecipe(i)}}>
+              <Text style={[styles.buttonDeleteOne]}>&#128465;</Text>
             </Pressable>
         </View>
         ))
@@ -82,7 +83,7 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
           setMessage('Before saving you should input a recipe name')
           setTimeout(() => {
             setMessage('');
-          }, 4000);
+          }, 8000);
         }
       }
 
@@ -97,7 +98,7 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
         <Pressable
           style={[styles.button, styles.buttonOpen]}
           onPress={openCloseModal}>
-          <Text style={styles.textStyleButton}>Actual recipe</Text>
+          <Text style={styles.textStyleButton}>ACTUAL RECIPE</Text>
         </Pressable>
     
         <Modal
@@ -112,36 +113,39 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
         <View style={styles.modalView}>
           
         <Pressable
-            style={[styles.button, styles.buttonClose]}
+            style={[styles.buttonClose]}
             onPress={openCloseModal}>
-            <Text style={styles.textStyleButton}>x</Text>
+            <Text style={styles.textStyleButtonCross}>&#10006;</Text>
         </Pressable>
 
           {actualRecipe.ingredients.length < 1 && <Text style={styles.noIngredients}>There aren't saved ingredients</Text>}
-          <ScrollView>
+      
           {actualRecipe.ingredients.length > 0 && 
             <View>
             <Text style={[styles.modalText,styles.title]}>EDIT YOUR RECIPE</Text>
             <TextInput 
             style={styles.input}
-            placeholder='Name of your recipe'
+            placeholder="Recipe's name"
             onChangeText={(text) => handleNameRecipe(text)}
             value={actualRecipe.name}/>
+            <Text style={styles.message}>{message}</Text>
+            <ScrollView style={styles.scrollView}>
             {displayActualRecipe()}
             <View style={styles.totals}>
             <Text style={styles.total}>TOTAL</Text>
-            <Text style={styles.total}> &#128293;ENERGY - {actualRecipe.ingredients.reduce((total,food)=>(total + food.kcal),0)} kcal</Text>
-            <Text >&#129379; QUANTITY - {actualRecipe.ingredients.reduce((total,food)=>(total + food.qty),0)}g</Text>
+            <Text style={styles.total}> &#128293;ENERGY - {Math.round(actualRecipe.ingredients.reduce((total,food)=>(total + food.kcal),0))} kcal</Text>
+            <Text >&#129379; QUANTITY - {Math.round(actualRecipe.ingredients.reduce((total,food)=>(total + food.qty),0))}g</Text>
             </View>
-            <Text>{message}</Text>
+            </ScrollView>
             <Pressable onPress={saveToHistory} style={[styles.button, styles.buttonSaveDelete, styles.buttonSave]}>
-            <Text style={styles.textStyleButton}>Save Recipe</Text> 
+            <Text style={styles.textStyleButtonModal}>Save recipe</Text> 
             </Pressable>
             <Pressable onPress={deleteAll} style={[styles.button, styles.buttonSaveDelete, styles.buttonDeleteAll]} >
-            <Text style={styles.textStyleButton}>Delelte all the Recipe</Text> 
+            <Text style={styles.textStyleButtonModal}>Delelte all the recipe</Text> 
             </Pressable>
+            
             </View>}
-            </ScrollView>
+        
         </View>    
         </View>
       </Modal>
@@ -210,7 +214,20 @@ const styles = StyleSheet.create({
     textStyleButton: {
       color: 'white',
       fontWeight: 'bold',
-      textAlign:'center',
+      textAlign:'auto',
+      fontSize:15,
+      letterSpacing:2,
+      paddingLeft:20
+    },
+    textStyleButtonModal: {
+      color: 'white',
+      fontWeight: 'bold',
+      textAlign:'auto',
+      fontSize:15,
+      textAlign:'center'
+    },
+    textStyleButtonCross:{
+      fontSize:25,
     },
     buttonOpen:{
       width:250,
@@ -222,9 +239,7 @@ const styles = StyleSheet.create({
     },
     buttonClose:{
       alignSelf:'flex-end',
-      borderRadius:30,
-      height:33,
-      marginBottom:20,
+      marginBottom:15,
     },
     buttonSaveDelete:{
       borderRadius:20,
@@ -238,9 +253,6 @@ const styles = StyleSheet.create({
     buttonDeleteAll:{
       backgroundColor:'red'
     },
-    buttonDeleteOne:{
-
-    },
     total:{
       fontSize:15,
       textAlign:'center',
@@ -253,5 +265,16 @@ const styles = StyleSheet.create({
     noIngredients:{
       fontSize:20,
       textAlign:'center',
+    },
+    message:{
+      fontSize:15,
+      marginBottom:20,
+      color:'red'
+    },
+    scrollView:{
+      height:300,
+    },
+    buttonDeleteOne:{
+      fontSize:25,
     }
   });
