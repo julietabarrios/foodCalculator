@@ -41,23 +41,23 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
 
       const displayActualRecipe = () => (
         actualRecipe.ingredients.map((food, i)=>(
-            <View style={styles.optionResult}>
+            <View style={styles.optionResult} key={i}>
             <View style={styles.textIngredient}>
             <Text 
                 style={styles.text}
-                key={i}>Food: {food.description}
+                >Food: {food.description}
             </Text>
             <Text 
                 style={styles.text}
-                key={i}>Category: {food.category}
+                >Category: {food.category}
             </Text>
             <Text 
                 style={styles.text}
-                key={i}>Quantity: {food.qty}g
+                >Quantity: {food.qty}g
             </Text>
             <Text 
                 style={styles.text}
-                key={i}>Energy: {food.kcal} kcal
+                >Energy: {food.kcal} kcal
             </Text>
             </View>
             <Pressable onPress={()=>{deleteFromRecipe(i)}}>
@@ -72,7 +72,7 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
       }
 
       const deleteFromRecipe = (i)=>{
-        const temp=[actualRecipe.ingredients]
+        const temp=[...actualRecipe.ingredients]
         temp.splice(i,1)
         setActualRecipe({...actualRecipe, ingredients:temp})
       }

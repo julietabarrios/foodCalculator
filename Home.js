@@ -1,9 +1,9 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import axios from 'axios';
 import { StyleSheet, Text, View, TextInput, SafeAreaView, Modal, Pressable, ScrollView } from 'react-native';
 import SavedRecipes from './SavedRecipes';
 import ActualRecipe from './ActualRecipe';
-
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 export default function Home() {
@@ -26,6 +26,7 @@ export default function Home() {
     nutrient:{}})
   const [message, setMessage]= useState ('')
   const [successMessage, setSuccessMessage]= useState('')
+  const [spinner, setSpinner]= useState(false)
 
 
 
@@ -54,12 +55,22 @@ export default function Home() {
   }
   }
 
+  useEffect(
+    () => {
+      setSpinner(false)
+    },[result]);
+
+
   const showResult = async () => {
     try{
         setDisplayOk(true)
+        if (result.length<1){
+          setSpinner(true)
+        }
         const response = await axios.get(`https://api.nal.usda.gov/fdc/v1/foods/search?api_key=3nfVd5dGrcppdxcvsNUAh8ZqVeE7xZBfeXMLBZUq&query="${search}"`)
         setResult(response.data.foods)
         console.log(response.data)
+  
         if(response.data.totalHits=="0"){
         setMessage('Ingredient not found')
         setTimeout(() => {
@@ -101,6 +112,12 @@ export default function Home() {
   
     </View>
 
+    <Spinner
+          visible={spinner}
+          textContent={'Loading...'}
+          textStyle={styles.spinnerTextStyle}
+        />
+
     {message != "" && <Text style= {message == 'Ingredient not found'? styles.messageNotFound : styles.successMessage }>{message}</Text>}
     {successMessage != "" && <Text style={[styles.messages,styles.successMessage]}>{successMessage}</Text>}
   
@@ -116,9 +133,6 @@ export default function Home() {
     </View>
     }
 
-    
-
-    
     {result.length>1 && displayOk && 
       <ScrollView style={styles.scrollView}>
         {result.map((option)=>(
@@ -186,6 +200,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex:1,
+  },
+  spinnerTextStyle: {
+    color: '#FFF'
   },
   optionResult:{
     borderColor:'gray',

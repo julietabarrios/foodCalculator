@@ -39,7 +39,7 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe, setModalSaved}) => {
     () => {
   const _retrieveData = async () => {
     try {
-      const value = await AsyncStorage.getItem('historyRecipe');
+      const value = await AsyncStorage.getItem('historyRecipe') || [];
       let bringBackToObj= JSON.parse(value)
       setHistoryRecipe(bringBackToObj)
   } catch (error) {}
@@ -51,7 +51,7 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe, setModalSaved}) => {
     const displayhistoryRecipe = () => (
       historyRecipe.map((recipe, i)=>(
   
-          <View style={styles.recipeSaved}>
+          <View style={styles.recipeSaved} key={i}>
           <Text 
               style={styles.text}
               >{recipe.name}
