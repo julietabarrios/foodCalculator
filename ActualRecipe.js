@@ -1,17 +1,23 @@
 import React, {useState,useEffect} from 'react'
-import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View, ScrollView} from 'react-native'
+import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View, ScrollView, Alert} from 'react-native'
 import {TextInput } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccessMessage}) => {
+const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccessMessage, setModalActual}) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [actualRecipe, setActualRecipe]=useState({name:"", ingredients: []})
     const [message, setMessage]= useState('')
     
-    const openCloseModal =()=>{
-        setModalVisible(!modalVisible)
+    const openModal =()=>{
+        setModalVisible(true)
+        setModalActual(true)
     }
+
+    const closeModal =()=>{
+      setModalVisible(false)
+      setModalActual(false)
+  }
 
     useEffect(
       () => {
@@ -22,7 +28,16 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
       }
       },[chosenOption]);
 
-  
+      const alert =(recipe,i) => {
+        Alert.alert(
+          `Are you sure you want to delete all the actual recipe without saving it?`,'',
+          [
+          {text: 'Yes', onPress: () => deleteAll()},
+          {text: 'No'},
+          ],
+          { cancelable: false }
+          )
+      }
 
       const displayActualRecipe = () => (
         actualRecipe.ingredients.map((food, i)=>(
@@ -72,9 +87,9 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
           temp.push(actualRecipe)
           setHistoryRecipe(temp)
           _storeData(temp)
-          openCloseModal()
+          closeModal()
           setActualRecipe({name:"", ingredients: []})
-          setSuccessMessage('The recipe was successfully added to your history!')
+          setSuccessMessage('The recipe was successfully added to your history')
           setTimeout(() => {
             setSuccessMessage('');
           }, 4000);
@@ -97,7 +112,7 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
     <SafeAreaView>
         <Pressable
           style={[styles.button, styles.buttonOpen]}
-          onPress={openCloseModal}>
+          onPress={openModal}>
           <Text style={styles.textStyleButton}>ACTUAL RECIPE</Text>
         </Pressable>
     
@@ -107,14 +122,14 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
         visible={modalVisible}
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
+          setModalVisible(false);
         }}>
         <View style={styles.centeredView}>
         <View style={styles.modalView}>
           
         <Pressable
             style={[styles.buttonClose]}
-            onPress={openCloseModal}>
+            onPress={closeModal}>
             <Text style={styles.textStyleButtonCross}>&#10006;</Text>
         </Pressable>
 
@@ -140,7 +155,7 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
             <Pressable onPress={saveToHistory} style={[styles.button, styles.buttonSaveDelete, styles.buttonSave]}>
             <Text style={styles.textStyleButtonModal}>Save recipe</Text> 
             </Pressable>
-            <Pressable onPress={deleteAll} style={[styles.button, styles.buttonSaveDelete, styles.buttonDeleteAll]} >
+            <Pressable onPress={alert} style={[styles.button, styles.buttonSaveDelete, styles.buttonDeleteAll]} >
             <Text style={styles.textStyleButtonModal}>Delelte all the recipe</Text> 
             </Pressable>
             
@@ -231,7 +246,9 @@ const styles = StyleSheet.create({
     },
     buttonOpen:{
       width:250,
-      height:40,
+      height:50,
+      justifyContent:'center',
+      
     },
     modalText: {
       marginBottom: 15,

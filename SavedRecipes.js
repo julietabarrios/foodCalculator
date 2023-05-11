@@ -1,18 +1,33 @@
 import React, {useState, useEffect} from 'react'
-import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View, LogBox, ScrollView} from 'react-native'
+import {Modal, Text, SafeAreaView, Pressable, StyleSheet, View, ScrollView, Alert} from 'react-native'
 import AllRecipeSaved from './AllRecipeSaved'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
+const SavedRecipes = ({historyRecipe, setHistoryRecipe, setModalSaved}) => {
     const [modalVisible, setModalVisible] = useState(false);
 
 
     const openModal =()=>{
         setModalVisible(true)
+        setModalSaved(true)
     }
 
-    // structure of each recipe (actual recipe) {name:"", ingredients: [{desc:"",cat:"",kcal:""},{desc:"",cat:"",kcal:""}]}
+    const closeModal =()=>{
+      setModalVisible(false)
+      setModalSaved(false)
+    }
+
+    const alert =(recipe,i) => {
+      Alert.alert(
+        `Are you sure you want to delete the recipe ${recipe.name} from your history?`,'',
+        [
+        {text: 'Yes', onPress: () => deleteFromHistory(i)},
+        {text: 'No'},
+        ],
+        { cancelable: false }
+        )
+    }
 
     const _storeData = async (x) => {
       try {
@@ -43,7 +58,7 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
           </Text>
           <View style={styles.buttonsSavedRecipe}>
           <AllRecipeSaved i={i} historyRecipe={historyRecipe}/>
-          <Pressable style={[styles.buttonDelete]} onPress={()=>{deleteFromHistory(i)}}>
+          <Pressable style={[styles.buttonDelete]} onPress={()=>{alert(recipe,i)}}>
             <Text style={styles.deleteOne}>&#128465;</Text>
           </Pressable>
           </View>
@@ -59,7 +74,7 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
     }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView >
     <Pressable
         style={[styles.button, styles.buttonOpen]}
         onPress={openModal}>
@@ -78,7 +93,7 @@ const SavedRecipes = ({historyRecipe, setHistoryRecipe}) => {
     <View style={styles.modalView}>
     <Pressable
             style={[styles.buttonClose]}
-            onPress={() => setModalVisible(!modalVisible)}>
+            onPress={closeModal}>
             <Text style={styles.textStyleButtonCross}>&#10006;</Text>
     </Pressable>
     { historyRecipe.length > 0 && <Text style={[styles.modalText, styles.title]}>YOUR SAVED RECIPES</Text>}
@@ -140,7 +155,9 @@ const styles = StyleSheet.create({
       },
     buttonOpen:{
       width:250,
-      height:40,
+      height:50,
+    
+      justifyContent:'center',
     },
       modalText: {
       marginBottom: 15,

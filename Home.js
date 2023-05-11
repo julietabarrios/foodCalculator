@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react'
+import React, {useState} from 'react'
 import axios from 'axios';
 import { StyleSheet, Text, View, TextInput, SafeAreaView, Modal, Pressable, ScrollView } from 'react-native';
 import SavedRecipes from './SavedRecipes';
@@ -18,6 +18,8 @@ export default function Home() {
   const [historyRecipe, setHistoryRecipe]= useState([])
   const [displayOk, setDisplayOk]= useState(true)
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalSaved, setModalSaved] = useState(false);
+  const [modalActual, setModalActual] = useState(false);
   const [qty,setQty]= useState(0)
   const [info, setInfo]= useState({
     option:{},
@@ -76,13 +78,15 @@ export default function Home() {
 
     return (
 
-    <SafeAreaView style={!modalVisible? styles.container : styles.containerOpacity}>
-    <View style={styles.topBar}>
-    <SavedRecipes historyRecipe={historyRecipe} setHistoryRecipe={setHistoryRecipe}/>      
-    <ActualRecipe chosenOption={chosenOption} historyRecipe={historyRecipe} setHistoryRecipe={setHistoryRecipe} setSuccessMessage={setSuccessMessage}/>
+    <SafeAreaView style={(modalSaved || modalVisible || modalActual)  ? styles.containerOpacity : styles.container }>
+    <View style={result.length>1 && displayOk ? styles.topBarWResults: styles.topBar}>
+    <SavedRecipes historyRecipe={historyRecipe} setHistoryRecipe={setHistoryRecipe} setModalSaved={setModalSaved}/>      
+    <ActualRecipe chosenOption={chosenOption} historyRecipe={historyRecipe} setHistoryRecipe={setHistoryRecipe} setSuccessMessage={setSuccessMessage} setModalActual={setModalActual}/>
     </View>
+
     
     <Text style={styles.title}>SEARCH FOR AN INGREDIENT</Text>
+    
     <View style={styles.inputPart}>
       <TextInput
         style={styles.input}
@@ -94,8 +98,13 @@ export default function Home() {
         onPress={showResult}>
         <Text style={styles.textStyleButtonSearching}>&#128270;</Text>
     </Pressable>
+  
     </View>
-    
+
+    {message != "" && <Text style= {message == 'Ingredient not found'? styles.messageNotFound : styles.successMessage }>{message}</Text>}
+    {successMessage != "" && <Text style={[styles.messages,styles.successMessage]}>{successMessage}</Text>}
+  
+
     {result.length>1 && displayOk && 
     <View>
     <Pressable 
@@ -107,14 +116,16 @@ export default function Home() {
     </View>
     }
 
-    <Text style= {message == 'Ingredient not found'? styles.messageNotFound : styles.successMessage }>{message}</Text>
-    <Text style={[styles.messages,styles.successMessage]}>{successMessage}</Text>
+    
 
-    <ScrollView style={styles.scrollView}>
-    <View style={styles.results}>
-    {result.length>1 && displayOk && result.map((option)=>(
+    
+    {result.length>1 && displayOk && 
+      <ScrollView style={styles.scrollView}>
+        {result.map((option)=>(
         option.foodNutrients.map((nutrient)=>(
         nutrient.unitName == 'KCAL'&&
+        
+        <View style={styles.results}>
         <Pressable style={styles.optionResult} onPress={()=>{showInputQty(option, nutrient)}}>
         <Text 
             style={styles.text}
@@ -125,9 +136,10 @@ export default function Home() {
             >Category: {option.foodCategory}
         </Text>
         <Text>Energy: {nutrient.value} kcal/100g</Text>
-    </Pressable>))))}
-    </View>
-    </ScrollView>
+    </Pressable>
+    </View>))))} 
+    </ScrollView>}
+    
    
     <Modal 
     animationType="slide"
@@ -170,12 +182,10 @@ export default function Home() {
 const styles = StyleSheet.create({
   containerOpacity: {
     flex:1,
-    justifyContent:'center',
     opacity:.2
   },
   container: {
     flex:1,
-    justifyContent:'center',
   },
   optionResult:{
     borderColor:'gray',
@@ -186,6 +196,7 @@ const styles = StyleSheet.create({
     marginBottom:7,
     marginHorizontal:7,
   },
+
   inputQty:{
     alignSelf:'center',
     borderStyle: "solid",
@@ -196,6 +207,7 @@ const styles = StyleSheet.create({
     marginBottom:30,
     borderRadius:5,
   },
+
   input:{
     borderStyle: "solid",
     borderColor:"black",
@@ -204,28 +216,40 @@ const styles = StyleSheet.create({
     width:310,
     height:50,
     marginLeft:5,
-    marginRight:5,
+    marginRight:10,
   },
+
   inputPart:{
     flex:1,
     flexDirection:'row',
     justifyContent:'center',
-    alignItems:'center',
+    alignItems:'flex-start',
+    gap:5,
+    maxHeight:80,
   },
+
   title:{
     textAlign:'center',
     fontSize:30,
     letterSpacing:5,
+    marginBottom:20,
   },
   topBar:{
-    flex:1,
+    height:250,
+    flexDirection:'row',
+    alignItems:'flex-start',
+    justifyContent:'space-around',
+    gap:100,
+  },
+  topBarWResults:{
+    height:100,
     flexDirection:'row',
     alignItems:'flex-start',
     justifyContent:'space-around',
     gap:100,
   },
   scrollView:{
-    height:300,
+    height:400,
   },
   modalView: {
     margin: 20,
@@ -295,16 +319,18 @@ const styles = StyleSheet.create({
     color:'red'
   },
   successMessage:{
-    color:'#228B22',
+    color:'#32CD32',
     textAlign:'center',
     fontSize:18,
     marginTop:10,
+    marginRight:5
   },
   messageNotFound:{
     textAlign:'center',
     fontSize:18,
     marginTop:10,
-    color:'red'
+    color:'red',
+    marginRight:5
   },
   text:{
     marginBottom:10,
@@ -313,7 +339,9 @@ const styles = StyleSheet.create({
     fontSize:18,
     textAlign:'center',
     letterSpacing:1,
-  }
+    marginBottom:10,
+  },
+  
 });
 
 
