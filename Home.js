@@ -48,7 +48,7 @@ export default function Home() {
     setSearch('')
     setResult([])
     setQty(0)
-    setMessage('The ingredient was successfully saved it')
+    setMessage('The ingredient was successfully saved')
     setTimeout(() => {
       setMessage('');
     }, 4000);
@@ -182,7 +182,7 @@ export default function Home() {
       </Pressable>}
 
     { isNaN(Number(qty)) && <Text style={[styles.messageModal, styles.invalidMessage]}>Invalid quantity provided</Text>}
-    {qty == "" && <Text style={styles.messageModal}>Provide a number of grames</Text>}
+    {qty == "" && <Text style={styles.messageModal}>Provide a number of grams</Text>}
     </View>
     </View>
     </Modal>

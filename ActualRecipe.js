@@ -156,7 +156,7 @@ const ActualSearch = ({chosenOption, historyRecipe, setHistoryRecipe, setSuccess
             <Text style={styles.textStyleButtonModal}>Save recipe</Text> 
             </Pressable>
             <Pressable onPress={alert} style={[styles.button, styles.buttonSaveDelete, styles.buttonDeleteAll]} >
-            <Text style={styles.textStyleButtonModal}>Delelte all the recipe</Text> 
+            <Text style={styles.textStyleButtonModal}>Delete all the recipe</Text> 
             </Pressable>
             
             </View>}
